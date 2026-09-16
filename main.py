@@ -2,6 +2,7 @@ import mysql.connector
 from mysql.connector import Error
 
 class perpro:
+    userVerified=False
     def __init__(self):
         try:
             config = {
@@ -40,6 +41,27 @@ class perpro:
     def listUsers(self):
         self.cursor.execute("SELECT * FROM users;")
         print(self.cursor.fetchall())
+
+    def loginUser(self):
+        userName=input("Enter Your User Name: ")
+        passw=input("Enter Your Password: ")
+        try:
+            self.cursor.execute("SELECT * FROM users")
+            users=self.cursor.fetchall()
+            print(users)
+            print()
+            if userName in users:
+                if passw==users[userName][passw]:
+                    userVerified = True
+                    print(userVerified)
+                    print(f"{userName}:{passw}")
+            else:
+                userVerified=False
+                print(userVerified)
+                print(f"{userName}:{passw}")
+
+        except:
+            print(f"User Unverified with credentials: uName={userName} password: {passw}")
        
 z=input("Enter what you wany to do: ")
 x=perpro()
