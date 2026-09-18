@@ -28,7 +28,7 @@ class ProductivityMonitor:
             #self.cursor.execute("DROP DATABASE productivityMonitor")
             self.cursor.execute("CREATE DATABASE IF NOT EXISTS productivityMonitor")
             self.cursor.execute("USE productivityMonitor")
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS users(id INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,userName VARCHAR(50) NOT NULL UNIQUE,password VARCHAR(100) NOT NULL,created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS users(id INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,userName VARCHAR(50) NOT NULL UNIQUE,password VARCHAR(100) NOT NULL,created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,last_login TIMESTAMP DEFAULT NULL)")
             self.cursor.execute("CREATE TABLE IF NOT EXISTS tasks(id INT AUTO_INCREMENT UNIQUE,taskName VARCHAR(100) NOT NULL,category VARCHAR(100) NOT NULL,created_by VARCHAR(50),created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,total_time TIMESTAMP NOT NULL);")
             #print("Successfully connected to MariaDB server!")
             self.initial()
@@ -53,20 +53,32 @@ class ProductivityMonitor:
     def addActivity(self):
         print("Add Task:")
         if self.userVerified == True:
-            tsk=["Python","DSA","SQL","C++","Projects","Linux","Other"]
+            tsk=["Python","DSA","SQL","C++","Projects","Linux","Collage Work","Other"]
             print(f"User:{self.userName}--------------Login at:{self.startTime}")
             print("Select Category: ")
             for i in range(len(tsk)):
                 print(f"{i+1}. {tsk[i]}")
             print()
             try:
-                i=int(input("--> "))
+                i=input("--> ")
+                i=int(i)
+            except KeyboardInterrupt:
+                print("Returning to Main Menu")
+                time.sleep(1)
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print(self.__logo)
+                self.whattodo()
             except:
+                if i=="e":
+                    print("Returning to Main Menu")
+                    time.sleep(1)
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                    print(self.__logo)
+                    self.whattodo()
                 print("Wront Choice.")
                 time.sleep(1)
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print(self.__logo)
-            #sTime=time.perf_counter()
             if i>len(tsk):
                 print("Incorrect Choice.")
                 time.sleep(0.5)
@@ -82,24 +94,20 @@ class ProductivityMonitor:
                 e
             except:
                 eTime=time.perf_counter()
-                #eTime=str(datetime.now())[10:]
                 querry="INSERT INTO tasks (taskName,category,created_by,created_on,total_time) VALUES (%s,%s,%s,%s,%s)"
-                #tt=f"{str(datetime.now())[:11]} {int(hours)}:{int(minutes)}:{seconds:.2f}"
-                #data=(work,tsk[i],self.userName,sTime,tt)
                 hours, remainder = divmod(eTime-sTime, 3600)
                 minutes, seconds = divmod(remainder, 60)
-                #print(f"Total Time Spent: {int(hours)}h {int(minutes)}m {seconds:.2f}s")
-                #self.cursor.execute(querry,data)
-                #tt=f"({str(datetime.now())[:4]},{str(datetime.now())[5:7]},{str(datetime.now())[8:10]},{int(hours)},{int(minutes)},{seconds:.2f})"
-                #st=f"({str(datetime.now())[:4]},{str(datetime.now())[5:7]},{str(datetime.now())[8:10]},{sTimeHum[:2]},{sTimeHum[3:5]},{sTimeHum[6:8]})"
                 tt=f"{str(datetime.now())[:10]} {sTimeHum[:2]}:{sTimeHum[3:5]}:{sTimeHum[6:8]}"
                 st=f"{str(datetime.now())[:10]} {sTimeHum[:2]}:{sTimeHum[3:5]}:{sTimeHum[6:8]}"
                 data=(work,tsk[i-1],self.userName,st,tt)
                 self.cursor.execute(querry,data)
-                #print(f"{sTime}:{eTime}")
                 self.conn.commit()
-                print(f"Total Time Spent: {int(hours)}h {int(minutes)}m {seconds:.2f}s")
-                #print(f"Total Time Spent: {tt}")
+                print(f"Total Time: {int(hours)}h {int(minutes)}m {seconds:.2f}s")
+                print("Returning to main menu")
+                time.sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print(self.__logo)
+                self.whattodo()
         else:
             print("Login First...")
             print()
@@ -172,8 +180,19 @@ class ProductivityMonitor:
         for i in range(len(querry)):
             print(f"{i+1}. {querry[i][1]}")
         try:
-            wtsk=int(input("Enter Which Activity you want to modify: "))
+            wtsk=input("Enter Which Activity you want to modify: ")
+            wtsk=int(wtsk)
+        except KeyboardInterrupt:
+            print("Returning to main menu")
+            time.sleep(0.4)
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(self.__logo)
+            self.whattodo()
         except:
+            if wtsk=="e":
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print(self.__logo)
+                self.whattodo()
             print("Wrong Input...")
             time.sleep(0.7)
             os.system('cls' if os.name == 'nt' else 'clear')
@@ -204,9 +223,74 @@ class ProductivityMonitor:
                 self.cursor.execute(querry)
                 self.conn.commit()
                 print("Done...")
+                time.sleep(1)
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print(self.__logo)
+                self.whattodo()
             except mysql.connector.Error as e:
                 print("Error Occured:\n"+e)
-        
+                
+    def deleteActivity(self):
+        if self.userVerified==False:
+            print("User Not Logged in.")
+            time.sleep(1)
+            self.loginUser()
+        querry=f"SELECT * FROM tasks WHERE created_by='{self.userName}'"
+        self.cursor.execute(querry)                                                                                           
+        querry=self.cursor.fetchall()
+        if querry==[]:
+            print("No Tasks To Display.")
+            input("Press Enter To Continue.")
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(self.__logo)
+            self.whattodo()
+        for i in range(len(querry)):
+            print(f"{i+1}. {querry[i][1]}")
+        try:
+            wtsk=input("Enter Which Activity you want to delete: ")
+            wtsk=int(wtsk)
+        except KeyboardInterrupt:
+            print("Returning to main menu")
+            time.sleep(0.4)
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(self.__logo)
+            self.whattodo()
+        except:
+            if wtsk=="e":
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print(self.__logo)
+                self.whattodo()
+            print("Wrong Input...")
+            time.sleep(0.7)
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(self.__logo)
+            self.updateActivity()
+        if wtsk>len(querry) or wtsk<0:
+            print("Wrong Choice.")
+            time.sleep(1)
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(self.__logo)
+            self.updateActivity()
+        tskid=querry[wtsk-1][0]
+        suretodelete=input("Are you sure you want to delete(y/N) ")
+        if suretodelete.lower()=="y":
+            querry=f"DELETE FROM tasks WHERE id={tskid}"
+            try:
+                self.cursor.execute(querry)
+                self.conn.commit()
+                print("Task Deleted.")
+                input("Press a key to continue.")
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print(self.__logo)
+                self.whattodo()
+            except mysql.connector.Error as e:
+                print("Error Occured:\n"+e)
+        else:
+            print("Task Not Deleted.")
+            time.sleep(1)
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(self.__logo)
+            self.whattodo()
         
     def whattodo(self):
         print(f"User:{self.userName}--------------Login at:{self.startTime}")
@@ -242,7 +326,6 @@ class ProductivityMonitor:
             print(self.__logo)
             self.updateActivity()
         elif i==4:
-            return
             os.system('cls' if os.name == 'nt' else 'clear')
             print(self.__logo)
             self.deleteActivity()
@@ -264,7 +347,7 @@ class ProductivityMonitor:
                 self.startTime=""
                 self.items=0
                 print("Logout Done.\nRedirecting to login.")
-                time.sleep(2)
+                time.sleep(1)
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print(self.__logo)
                 self.initial()
@@ -280,13 +363,7 @@ class ProductivityMonitor:
         print(self.__logo)
         userName=input("Enter Your User Name: ")
         passw=input("Enter Your Password: ")
-        try:
-            self.cursor.execute(f"SELECT * FROM users WHERE userName='{userName}'")
-        except:
-            print("Invalid Credentials.\n Try Again.")
-            os.system('cls' if os.name == 'nt' else 'clear')
-            print(self.__logo)
-            self.loginUser()         
+        self.cursor.execute(f"SELECT * FROM users WHERE userName='{userName}'")
         users=self.cursor.fetchone()
         if users==None:
             print("Invalid Credentials.\nIf you are a new user try creating a new user.")
@@ -298,11 +375,19 @@ class ProductivityMonitor:
             self.userVerified = True
             self.userName=userName
             self.startTime = time.strftime("%H:%M:%S",time.localtime(time.time()))
-            print("Login Successful...")
-            time.sleep(0.4)
-            os.system('cls' if os.name == 'nt' else 'clear')
-            print(self.__logo)
-            self.whattodo()
+            sTimeHum=str(self.startTime)
+            t=f"{str(datetime.now())[:10]} {sTimeHum[:2]}:{sTimeHum[3:5]}:{sTimeHum[6:8]}"
+            querry=f"UPDATE users SET last_login='{t}' WHERE userName='{userName}'"
+            try:
+                self.cursor.execute(querry)
+                self.conn.commit()
+                print("Login Successful...")
+                time.sleep(0.4)
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print(self.__logo)
+                self.whattodo()
+            except mysql.connector.Error as e:
+                print(e)
         else:
             print("Invalid Credentials. Try Again.")
             time.sleep(1)
