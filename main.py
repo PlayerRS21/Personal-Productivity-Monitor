@@ -39,7 +39,6 @@ class ProductivityMonitor:
             exit()
 
     # Checking is the user new or old via login and register
-
     def initial(self):
         # os.system('cls' if os.name == 'nt' else 'clear')
         # print(self.__logo)
@@ -56,6 +55,7 @@ class ProductivityMonitor:
         else:
             print("Wrong Input \nPress 'q' to exit.")
             self.initial()
+
     def newScreen(self):
         os.system('cls' if os.name=='nt' else 'clear')
         print(self.__logo)
@@ -63,6 +63,7 @@ class ProductivityMonitor:
             print(f"User: {self.userName}-------------------Login at:{self.startTime}")
             print()
 
+    # Function to add tasks
     def addActivity(self):
         self.newScreen()
         print("Add Task:")
@@ -134,7 +135,9 @@ class ProductivityMonitor:
             time.sleep(1)
             os.system('cls' if os.name == 'nt' else 'clear')
             self.loginUser()
-            
+
+
+    # Function to create new user
     def createUser(self):
         # os.system('cls' if os.name == 'nt' else 'clear')
         # print(self.__logo)
@@ -167,6 +170,7 @@ class ProductivityMonitor:
                 else:
                     print(e)
 
+    # Function to View Tasks Done
     def viewActivity(self):
         # print(f"User:{self.userName}--------------Login at:{self.startTime}")
         self.newScreen()
@@ -198,6 +202,8 @@ class ProductivityMonitor:
             # self.newScreen()
             self.whattodo()
 
+
+    # Function to Search Tasks
     def searchActivity(self):
         self.newScreen()
         # print(f"User:{self.userName}--------------Login at:{self.startTime}")
@@ -247,7 +253,8 @@ class ProductivityMonitor:
         # print(self.__logo)
         # self.newScreen()
         self.whattodo()
-            
+
+    # Function to Update Activity
     def updateActivity(self):
         self.newScreen()
         # print(f"User:{self.userName}--------------Login at:{self.startTime}")
@@ -371,7 +378,8 @@ class ProductivityMonitor:
                 self.whattodo()
             except mysql.connector.Error as e:
                 print(e)
-                
+
+    # Function to Delete Task
     def deleteActivity(self):
         self.newScreen()
         # print(f"User:{self.userName}--------------Login at:{self.startTime}")
@@ -435,7 +443,8 @@ class ProductivityMonitor:
             # os.system('cls' if os.name == 'nt' else 'clear')
             # print(self.__logo)
             self.whattodo()
-        
+
+    # Function to Route User
     def whattodo(self):
         self.newScreen()
         # print(f"User:{self.userName}--------------Login at:{self.startTime}")
@@ -499,7 +508,8 @@ class ProductivityMonitor:
             # os.system('cls' if os.name == 'nt' else 'clear')
             # print(self.__logo)
             self.whattodo()
-        
+
+    # Function to login user
     def loginUser(self):
         self.newScreen()
         # os.system('cls' if os.name == 'nt' else 'clear')
@@ -538,6 +548,7 @@ class ProductivityMonitor:
             # print(self.__logo)
             self.loginUser()
 
+    # Fubction to View Statistics
     def viewStat(self):
         self.newScreen()
         querry=f"SELECT SUM(total_time) FROM tasks WHERE created_by=%s AND category=%s"
