@@ -1,221 +1,178 @@
-Productivity Tracker
+⚡ Productivity Tracker
 
-A lightweight command-line productivity tracker built with Python and SQLite.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
+  <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux">
+  <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git">
+  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+</p><p align="center">
+  <b>A lightweight productivity and task-tracking application built with Python and SQLite.</b>
+</p><p align="center">
+  Built from the ground up as a practical project for learning Python, SQL, Git, Linux, software architecture, and eventually production deployment.
+</p>---
 
-The goal of this project is to practice Python fundamentals, SQL CRUD operations, database design, Git/GitHub, Linux development, and basic software engineering while building something that can eventually evolve into a real productivity-tracking application.
+📌 About The Project
 
-Project Status
+Productivity Tracker is a lightweight productivity management application designed to help users organize tasks, track their work, search previous tasks, and view productivity statistics.
 
-Version: V1 — Manual Session Tracking
-Status: In Development
+The project started as a Python + SQL learning project, but it is intentionally designed with a longer-term goal:
 
-V1 is intentionally simple. The application works as a manual stopwatch:
+«Turn the initial CLI application into a complete, production-ready productivity platform.»
 
-1. The user starts a session.
-2. The application records the start timestamp.
-3. The user works on the selected task.
-4. The user stops the session.
-5. The application records the end timestamp.
-6. The duration is calculated from the two timestamps.
-7. The session is stored in SQLite.
+The current version focuses on the fundamentals:
 
-The application does not attempt to determine whether the user is actually working.
-
----
-
-Objectives
-
-This project is being developed to practice:
-
-- Python fundamentals
-- Functions and modular programming
-- Object-oriented programming where appropriate
-- Exception handling
-- SQLite and SQL
-- CRUD operations
-- Database relationships
-- Date and time handling
-- Input validation
-- Git and GitHub
-- Linux command-line development
-- Project organization
-- Testing and debugging
-
----
-
-Planned Features
-
-V1 — Manual Tracking
-
-- Start a productivity session
-- Stop a productivity session
-- Record start and end timestamps
-- Calculate session duration
-- Assign a category to a session
-- Add a task description
-- Store sessions in SQLite
-- View previous sessions
-- Update session information
-- Delete sessions
-- View basic productivity statistics
-
-Future Versions
-
-The project is designed to be extended beyond the initial CLI application.
-
-Possible future features include:
-
-- Automatic Linux activity tracking
-- Active-window detection
-- Application and website tracking
-- Automatic activity classification
-- Background tracking daemon
-- Productivity dashboard
-- FastAPI REST API
-- PostgreSQL support
-- Web interface
+- Python programming
+- SQL and CRUD operations
+- Database design
 - User authentication
-- Goals and productivity streaks
-- Weekly/monthly reports
-- Data export
-- Cloud synchronization
-- Multi-device support
+- Searching and filtering
+- Application logic
+- Git/GitHub workflow
+- Linux development
+
+Future versions will gradually introduce APIs, automatic Linux activity tracking, dashboards, analytics, cloud infrastructure, and potentially a SaaS model.
 
 ---
 
-Example Workflow
+✨ Current Features — V1
 
-$ productivity
+The first version is currently functional and includes:
 
-========================================
-        PRODUCTIVITY TRACKER
-========================================
+👤 User Management
 
-1. Start Session
-2. View Sessions
-3. Statistics
-4. Manage Categories
-5. Exit
+- User registration
+- User login
+- Logout
+- User-specific task management
 
-Enter choice: 1
+📝 Task Management
 
-Category: Python
-Task: Practice OOP
+- Add tasks
+- View tasks
+- Update task name
+- Update task category
+- Delete tasks
 
-Session started.
+🔎 Search
 
-Elapsed: 00:32:17
+- Search tasks by name
+- Search tasks by category
 
-Press Ctrl+C to stop...
+📊 Statistics
 
-After stopping:
+- View productivity/task statistics
+- Calculate useful information from stored data
 
-Session stopped.
+🗄️ Database
 
-Started : 2026-09-21 22:15:31
-Ended   : 2026-09-21 22:47:48
-Duration: 32m 17s
-
-Save session? [Y/n]
-
----
-
-How Duration Is Calculated
-
-The application uses timestamps rather than relying on a continuously incremented counter.
-
-duration = ended_at - started_at
-
-For example:
-
-Started : 22:15:31
-Ended   : 23:02:43
-Duration: 47m 12s
-
-The displayed stopwatch is only for user feedback. The database timestamps are the source of truth.
+- SQLite database
+- Persistent data storage
+- CRUD operations
+- Relational data handling
 
 ---
 
-Technology Stack
+🖥️ Current Workflow
 
-Current
+The current V1 workflow is intentionally simple:
 
-- Python
-- SQLite
-- SQL
+                ┌──────────────┐
+                │     User     │
+                └──────┬───────┘
+                       │
+                       ▼
+                ┌──────────────┐
+                │    Login /   │
+                │   Register   │
+                └──────┬───────┘
+                       │
+                       ▼
+              ┌─────────────────┐
+              │ Productivity    │
+              │     Tracker     │
+              └────────┬────────┘
+                       │
+          ┌────────────┼────────────┐
+          ▼            ▼            ▼
+       Add Task     View Tasks    Statistics
+          │            │            │
+          ▼            ▼            ▼
+       Update        Search       Analysis
+          │
+          ▼
+       Delete
+
+---
+
+🛠️ Tech Stack
+
+Technology| Purpose
+🐍 Python| Application logic
+🗄️ SQLite| Database
+🐧 Linux| Development environment
+🔀 Git| Version control
+🐙 GitHub| Source code management
+
+More technologies will be introduced as the project evolves.
+
+---
+
+🚀 Getting Started
+
+Prerequisites
+
+You need:
+
+- Python 3.x
 - Git
-- GitHub
-- Linux
+- SQLite
+- A terminal
 
-Planned
-
-- FastAPI
-- PostgreSQL
-- HTML/CSS/JavaScript or another frontend
-- Linux system services/background processes
+Linux is currently the primary development environment.
 
 ---
 
-Database
+📥 Clone the Repository
 
-The initial version uses SQLite because it is lightweight and requires no separate database server.
-
-Planned entities include:
-
-Users
-
-Stores user information.
-
-id
-username
-email
-password
-created_at
-
-Categories
-
-Stores productivity categories.
-
-id
-name
-description
-
-Sessions
-
-Stores productivity sessions.
-
-id
-user_id
-category_id
-task
-started_at
-ended_at
-duration
-created_at
-
-The exact schema may change during development.
+git clone https://github.com/PlayerRS21/productivity-tracker.git
+cd productivity-tracker
 
 ---
 
-CRUD Operations
+🐍 Create a Virtual Environment
 
-The application will practice CRUD operations on its database entities.
+python -m venv .venv
 
-Operation| Example
-Create| Add a productivity session
-Read| View previous sessions
-Update| Modify session details
-Delete| Remove a session
+Activate it:
 
-SQL will initially be written and understood directly rather than hiding database operations behind a complex abstraction.
+source .venv/bin/activate
 
 ---
 
-Project Structure
+📦 Install Dependencies
 
-The project structure will evolve as development progresses.
+If the project has dependencies:
 
-The planned initial structure is:
+pip install -r requirements.txt
+
+If there are no external dependencies, this step can be skipped.
+
+---
+
+▶️ Run the Application
+
+python main.py
+
+«The exact command may change as the project architecture evolves.»
+
+---
+
+📂 Project Structure
+
+The structure may evolve as new versions are introduced.
+
+A typical structure for the current project is:
 
 productivity-tracker/
 │
@@ -229,141 +186,597 @@ productivity-tracker/
 ├── src/
 │   ├── main.py
 │   ├── database.py
-│   ├── sessions.py
-│   ├── categories.py
+│   ├── users.py
+│   ├── tasks.py
 │   └── statistics.py
 │
 └── tests/
 
-The structure may be modified when there is a technical reason to do so.
+«The actual repository structure may differ depending on implementation decisions.»
 
 ---
 
-Installation
+🗺️ Development Roadmap
 
-Clone the repository:
+The project is being developed incrementally.
 
-git clone <repository-url>
-cd productivity-tracker
+The goal is not to jump directly from a CLI application to a massive SaaS platform.
 
-Create a Python virtual environment:
-
-python -m venv .venv
-
-Activate it on Linux:
-
-source .venv/bin/activate
-
-Install dependencies:
-
-pip install -r requirements.txt
-
-Run the application:
-
-python src/main.py
-
-«Installation and execution instructions will be updated as the project develops.»
+Each version introduces new engineering concepts.
 
 ---
 
-Development Workflow
+✅ V1 — Core Productivity Tracker
 
-Development is performed primarily through the Linux terminal.
+Status: Completed
 
-Git is used to track development history.
+The objective of V1 was to build a functional Python + SQL application and practice fundamental programming concepts.
 
-Example commits:
+Completed
 
-initial project setup
-add database schema
-implement session creation
-implement session listing
-add session update
-add session deletion
-add statistics
-improve input validation
-update documentation
-
-The repository should contain the development history rather than only the final version.
-
----
-
-Testing
-
-The application should be tested against normal and invalid input.
-
-Examples:
-
-- Starting a session
-- Stopping a session
-- Saving a session
-- Cancelling a session
-- Invalid menu selections
-- Invalid session IDs
-- Invalid category IDs
-- Empty task names
-- Database errors
-- Updating existing sessions
-- Deleting existing sessions
-- Viewing sessions when no data exists
-
-Testing will initially be performed manually, with automated tests added as the project matures.
+- [x] User registration
+- [x] User login
+- [x] Logout
+- [x] Add task
+- [x] View tasks
+- [x] Update task name
+- [x] Update task category
+- [x] Delete task
+- [x] Search task by name
+- [x] Search task by category
+- [x] View statistics
+- [x] SQLite database
+- [x] CRUD operations
+- [x] Basic error handling
+- [x] Git version control
 
 ---
 
-Design Philosophy
+🔨 V2 — Time Tracking
 
-The first version intentionally avoids unnecessary complexity.
+Status: Planned
 
-The development strategy is:
+V2 will introduce actual productivity session tracking.
 
-Simple CLI
-    ↓
-Correct Python logic
-    ↓
-Correct database design
-    ↓
-CRUD
-    ↓
-Statistics
-    ↓
-API
-    ↓
-Automatic Linux tracking
-    ↓
-Web application
-    ↓
-Production-ready product
+Instead of simply storing tasks, users will be able to start and stop work sessions.
 
-The objective is to understand each layer before adding the next one.
+Planned Features
 
----
+- [ ] Start productivity session
+- [ ] Stop productivity session
+- [ ] Record "started_at"
+- [ ] Record "ended_at"
+- [ ] Calculate session duration
+- [ ] Associate sessions with tasks/categories
+- [ ] View today's total working time
+- [ ] View historical sessions
+- [ ] Daily productivity statistics
+- [ ] Weekly productivity statistics
 
-Future Product Direction
+Basic Architecture
 
-The long-term goal is to explore whether the project can evolve from a learning project into a useful productivity product.
+START SESSION
+      │
+      ▼
+started_at
+      │
+      ▼
+    WORK
+      │
+      ▼
+STOP SESSION
+      │
+      ▼
+ended_at
+      │
+      ▼
+duration = ended_at - started_at
+      │
+      ▼
+   SQLite
 
-Potential users could include:
-
-- Students
-- Developers
-- Freelancers
-- Remote workers
-
-Potential product capabilities could include automatic activity tracking, productivity analytics, goals, reports, synchronization, and multi-device support.
-
-These features are future possibilities, not commitments for V1.
-
----
-
-License
-
-License to be decided.
+The application will initially behave like a database-backed productivity stopwatch.
 
 ---
 
-Author
+🐧 V3 — Linux Activity Tracking
 
-Ritesh
+Status: Planned
 
-GitHub: "PlayerRS21" (https://github.com/PlayerRS21)
+The project will eventually become useful as an actual Linux productivity tool.
+
+Instead of requiring the user to manually record everything, the application will be able to observe system activity.
+
+Potential data sources:
+
+- Active application
+- Active window
+- Window title
+- Workspace
+- Idle time
+- Project directory
+- Timestamp
+
+Example:
+
+22:00 → VS Code
+22:25 → Firefox
+22:40 → Terminal
+23:10 → VS Code
+
+The application could then build an activity timeline.
+
+Important
+
+The system will initially record observable computer activity, not pretend that it knows exactly what the user is doing.
+
+For example:
+
+Firefox + Python documentation
+
+does not prove that the user is studying Python.
+
+Later versions may introduce configurable classification rules.
+
+---
+
+🧠 V4 — Activity Classification
+
+Status: Planned
+
+Introduce configurable rules for automatically categorizing detected activity.
+
+Example:
+
+VS Code
+PyCharm
+Neovim
+        ↓
+Programming
+
+docs.python.org
+github.com
+stackoverflow.com
+        ↓
+Development / Learning
+
+Steam
+        ↓
+Gaming
+
+Users should eventually be able to create and modify their own rules.
+
+Example:
+
+Domain: youtube.com
+Category: Learning
+
+This avoids hard-coding assumptions into the application.
+
+---
+
+📊 V5 — Advanced Analytics
+
+Status: Planned
+
+The statistics system will become significantly more powerful.
+
+Potential features:
+
+- [ ] Daily productivity charts
+- [ ] Weekly productivity charts
+- [ ] Monthly reports
+- [ ] Category distribution
+- [ ] Productivity trends
+- [ ] Most productive hours
+- [ ] Most productive days
+- [ ] Time spent per project
+- [ ] Time spent per category
+- [ ] Productivity streaks
+- [ ] Goal completion percentage
+- [ ] Historical comparisons
+
+Example:
+
+Weekly Productivity
+
+Mon  ████████████  6h 20m
+Tue  █████████     4h 45m
+Wed  ███████████   5h 30m
+Thu  █████████████ 7h 05m
+Fri  ████████      4h 10m
+
+---
+
+🎯 V6 — Goals & Habit System
+
+Status: Planned
+
+Users will be able to create measurable productivity goals.
+
+Example:
+
+Goal: Python
+Target: 10 hours/week
+
+Progress:
+████████░░  8 / 10 hours
+
+Completion: 80%
+
+Potential features:
+
+- [ ] Daily goals
+- [ ] Weekly goals
+- [ ] Monthly goals
+- [ ] Productivity streaks
+- [ ] Goal progress
+- [ ] Custom targets
+- [ ] Achievement system
+- [ ] Reminders
+
+---
+
+🌐 V7 — FastAPI Backend
+
+Status: Planned
+
+The CLI application will eventually evolve into a backend service.
+
+Planned architecture:
+
+                 Client
+                   │
+                   ▼
+              ┌─────────┐
+              │ FastAPI │
+              └────┬────┘
+                   │
+          ┌────────┴────────┐
+          ▼                 ▼
+      Application         Database
+        Logic          PostgreSQL/SQLite
+
+Potential API endpoints:
+
+POST   /auth/register
+POST   /auth/login
+
+GET    /tasks
+POST   /tasks
+PATCH  /tasks/{id}
+DELETE /tasks/{id}
+
+GET    /sessions
+POST   /sessions/start
+POST   /sessions/{id}/stop
+
+GET    /statistics
+GET    /statistics/daily
+GET    /statistics/weekly
+
+---
+
+🖥️ V8 — Web Dashboard
+
+Status: Planned
+
+Build a proper web interface.
+
+Potential dashboard:
+
+┌─────────────────────────────────────────┐
+│          PRODUCTIVITY DASHBOARD         │
+├─────────────────────────────────────────┤
+│                                         │
+│  TODAY        THIS WEEK       TOTAL     │
+│  4h 32m       27h 15m        183h      │
+│                                         │
+├─────────────────────────────────────────┤
+│                                         │
+│        PRODUCTIVITY GRAPH               │
+│                                         │
+├─────────────────────────────────────────┤
+│                                         │
+│  Programming       ███████████  62%     │
+│  Learning          ██████       24%     │
+│  Other             ███          14%     │
+│                                         │
+└─────────────────────────────────────────┘
+
+---
+
+☁️ V9 — Cloud & Multi-Device Support
+
+Status: Planned
+
+Move beyond local-only storage.
+
+Potential features:
+
+- [ ] PostgreSQL
+- [ ] Cloud deployment
+- [ ] User accounts
+- [ ] Secure authentication
+- [ ] Data synchronization
+- [ ] Multi-device support
+- [ ] Backup and restore
+- [ ] Account settings
+
+Potential architecture:
+
+Linux Client ──────┐
+                   │
+Web Dashboard ─────┼──→ API ──→ PostgreSQL
+                   │
+Mobile Client ─────┘
+
+---
+
+💼 V10 — Production / SaaS Version
+
+Status: Long-term Goal
+
+The ultimate goal is to determine whether this project can become a real product rather than remaining a learning project.
+
+Potential features:
+
+- [ ] Production authentication
+- [ ] Secure password hashing
+- [ ] Session management
+- [ ] Rate limiting
+- [ ] API security
+- [ ] PostgreSQL
+- [ ] Docker
+- [ ] CI/CD
+- [ ] Automated testing
+- [ ] Logging
+- [ ] Monitoring
+- [ ] Error tracking
+- [ ] Cloud deployment
+- [ ] Subscription system
+- [ ] Free/Pro plans
+- [ ] Data export
+- [ ] Privacy controls
+
+Possible product model:
+
+FREE
+├── Task tracking
+├── Basic statistics
+└── Limited history
+
+PRO
+├── Advanced analytics
+├── Unlimited history
+├── Automatic activity tracking
+├── Goals
+├── Reports
+├── Cloud synchronization
+└── Multi-device support
+
+This is a future product direction, not a current feature.
+
+---
+
+🔐 Privacy
+
+Automatic productivity tracking can involve sensitive information.
+
+Future versions will therefore need to take privacy seriously.
+
+Potential privacy controls:
+
+- Local-only mode
+- User-controlled tracking
+- Application exclusions
+- Domain exclusions
+- Pause tracking
+- Data deletion
+- Data export
+- Transparent data collection
+- No hidden tracking
+
+The application should never silently collect information that the user did not explicitly agree to provide.
+
+---
+
+🧪 Testing Strategy
+
+Testing will become more comprehensive as the project evolves.
+
+Future testing may include:
+
+- Unit tests
+- Integration tests
+- Database tests
+- API tests
+- Authentication tests
+- Edge-case testing
+- Automated CI testing
+
+Example cases:
+
+Register duplicate user
+Invalid login
+Invalid task ID
+Empty task name
+Invalid category
+Delete nonexistent task
+Unauthorized task access
+Invalid database input
+
+---
+
+🐛 Bug Reports & Contributions
+
+If you visit this repository and discover a bug, unexpected behavior, or something that could be improved, please report it.
+
+You can open a GitHub Issue with:
+
+Bug Report Template
+
+## Bug Description
+
+Describe what happened.
+
+## Steps to Reproduce
+
+1.
+2.
+3.
+
+## Expected Behavior
+
+What should have happened?
+
+## Actual Behavior
+
+What actually happened?
+
+## Environment
+
+OS:
+Python version:
+Project version:
+
+## Additional Information
+
+Logs, screenshots, or other useful information.
+
+Constructive feedback, bug reports, feature ideas, and technical suggestions are welcome.
+
+If you want to contribute code, feel free to open a Pull Request.
+
+---
+
+🧑‍💻 Development Philosophy
+
+This project is intentionally being developed incrementally.
+
+The philosophy is:
+
+Learn
+  ↓
+Build
+  ↓
+Break
+  ↓
+Debug
+  ↓
+Refactor
+  ↓
+Test
+  ↓
+Deploy
+  ↓
+Improve
+
+The project started as a way to practice:
+
+- Python fundamentals
+- Logic building
+- SQL
+- CRUD
+- Git
+- GitHub
+- Linux
+
+The long-term objective is to use the same project to learn:
+
+- Software architecture
+- Backend development
+- REST APIs
+- FastAPI
+- PostgreSQL
+- Authentication
+- Linux system integration
+- Testing
+- Docker
+- CI/CD
+- Cloud deployment
+- SaaS development
+
+---
+
+📈 Project Evolution
+
+V1
+│
+├── Python
+├── SQLite
+├── CRUD
+└── CLI
+     │
+     ▼
+V2
+│
+├── Time Tracking
+└── Session Management
+     │
+     ▼
+V3
+│
+├── Linux Integration
+└── Automatic Activity Detection
+     │
+     ▼
+V4
+│
+└── Activity Classification
+     │
+     ▼
+V5
+│
+└── Advanced Analytics
+     │
+     ▼
+V6
+│
+└── Goals & Streaks
+     │
+     ▼
+V7
+│
+└── FastAPI Backend
+     │
+     ▼
+V8
+│
+└── Web Dashboard
+     │
+     ▼
+V9
+│
+└── Cloud + Multi-device
+     │
+     ▼
+V10
+│
+└── Production / SaaS
+
+---
+
+📜 License
+
+This project is currently under development.
+
+A formal open-source license will be added when the project reaches a stable release.
+
+---
+
+👨‍💻 Author
+
+Ritesh Saini
+
+BSc Artificial Intelligence & Machine Learning Student
+
+GitHub: "@PlayerRS21" (https://github.com/PlayerRS21)
+
+---
+
+<p align="center">
+  <b>Built with Python. Powered by curiosity. Evolving one version at a time. ⚡</b>
+</p><p align="center">
+  ⭐ If you find the project interesting, consider giving the repository a star.
+</p>
