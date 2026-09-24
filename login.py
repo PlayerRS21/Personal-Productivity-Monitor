@@ -1,18 +1,26 @@
 import newScreen as ns
-import mysql.connector
-from mysql.connector import Error
 import time
 from datetime import datetime
-from database import connectDB, dbExecute
+import startTask as sa
+import database as db
+import variables as v
+import router as r
 
 
 # Function to login user
 def loginUser():
+    DataBase=db.connectDB()
+    if DataBase[0]==True:
+        conn=DataBase[1]
+        cursor=DataBase[2]
+    elif DataBase[0]==False:
+        print("An Error Occured.")
+        exit()
     qCount=0
     while qCount<2:
         ns.header()
         try:
-            userName=input("Enter Your User Name: ")
+            userName=input("Enter Your User Name or enter 'q' to quit: ")
             if userName=="q" and  qCount<1:
                 qCount=qCount+1
                 print("Can't use 'q' as user name.\nIf you want to quit press 'q' again.")
@@ -41,15 +49,8 @@ def loginUser():
             print("A system input/output error occurred.")
             break
 
-        try:
-            query=f"SELECT * FROM users WHERE userName=%s"
-            # cursor.execute(query,(userName,))
-            users=dbExecute(query,(userName,))
-            # print(users)
-            
-        except mysql.connector.Error as e:
-            print(f"Error in DataBase\n{e}")
-            break
+        query=f"SELECT * FROM users WHERE userName=%s"
+        users=db.DBExecute(query,(userName,))
             
         if users==[]:
             print("Invalid Credentials.")
@@ -57,31 +58,24 @@ def loginUser():
             continue
             
         if passw==users[0][3]:
-            userVerified = True
-            userName=userName
-            startTime = time.strftime("%H:%M:%S",time.localtime(time.time()))
-            sTimeHum=str(startTime)
-            t=f"{str(datetime.now())[:10]} {sTimeHum[:2]}:{sTimeHum[3:5]}:{sTimeHum[6:8]}"
-            querry=f"UPDATE users SET last_login='{t}' WHERE userName='{userName}'"
+            loginTime = time.strftime("%H:%M:%S",time.localtime(time.time()))
+            querry=f"UPDATE users SET last_login=%s WHERE userName=%s"
+            data=(str(datetime.now())[:10]+" "+str(loginTime),userName)
             
-            try:
-                cursor.execute(querry)
-                conn.commit()
+            response=db.DBSaveData(querry,data)
+            if response["status"]==True:
+                v.loginTime=loginTime
+                v.userName=userName
+                v.userVerified = True
+                v.userID=users[0][0]
                 print("Login Successful...")
                 time.sleep(0.4)
-                break
-                
-            except mysql.connector.Error as e:
-                print(e)
-                break
+                r.router()
+                # print(v.userVerified,v.userID,v.loginTime,)
                 
         else:
             print("Invalid Credentials. Try Again.")
             time.sleep(1)
             continue
-
-db=connectDB()
-if db[0]==True:
-    conn=db[1]
-    cursor=db[2]
+if __name__=="__main__":
     loginUser()
