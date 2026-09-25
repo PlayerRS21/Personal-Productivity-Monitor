@@ -14,6 +14,48 @@ allCategories={}
 with open(".categories.json","r")as file:
     allCategories=json.load(file)
 
-# def defaultList(): 
-    # return {"Python":"001","DSA":"002","SQL":"003","C++":"004","Projects":"005","Linux":"006","Collage Work":"007","Other":"008"}
+def listAllCategories():
+    return allCategories
 
+def chooseCategory():
+    while True:
+        print("Select Category: \n")
+        i=1
+        for key in allCategories.values():
+            print(f" {i}. {key}")
+            i+=1
+        
+        try:
+            selectCategory=input("--> ")
+            selectCategory=int(selectCategory)
+        
+        except ValueError:
+            if selectCategory=="e":
+                print("Exiting...")
+                time.sleep(1)
+                condition=False
+                break
+        
+        except EOFError:
+            print("No input was provided.")
+            time.sleep(1)
+            continue
+        
+        except KeyboardInterrupt:
+            print("\nInput cancelled by the user.")
+            print("Returning to main menu.")
+            time.sleep(1)
+            condition=False
+            break
+        
+        except OSError:
+            print("A system input/output error occurred.")
+            condition =False
+            break
+        
+        if selectCategory>len(allCategories):
+            print("Incorrect Choice.")
+            time.sleep(0.5)
+            continue
+
+        return selectCategory+100

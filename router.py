@@ -2,17 +2,21 @@ import time
 import startTask as st
 import viewTask as vw
 from newScreen import header
-# import updateTask as up
+import updateTask as up
 import deleteTask as de
-# import searchTask as se
-# import statistics as stat
+import searchTask as se
+import statistics as stat
 import variables as v
 
 
-
+def loginCheck():
+    if v.userVerified == False:
+        print("Login First")
+        exit()
 
 # Routes to every function
 def router():
+    loginCheck()
     while True:
         header()
         newchoice=["Add New Task","View Previous Tasks","Update Activity","Delete Activity","Search Activity","View Statistics","Logout"]
@@ -59,17 +63,17 @@ def router():
         elif choice==2:
             vw.viewActivity()
             
-        # elif choice==3:
-            # up.updateActivity()
+        elif choice==3:
+            up.updateActivity()
             
         elif choice==4:
             de.deleteActivity()
             
-        # elif choice==5:
-            # se.searchActivity()
+        elif choice==5:
+            se.searchActivity()
             
-        # elif choice==6:
-            # stat.statistics()
+        elif choice==6:
+            stat.viewStatistics()
             
         elif choice==7:
             x=input("Sure to Logout?(Y/n) ")

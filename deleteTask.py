@@ -5,9 +5,14 @@ import time
 from viewTask import listtasks
 
 
+def loginCheck():
+    if v.userVerified == False:
+        print("Login First")
+        exit()
 
 # Function to Delete Task
 def deleteActivity():
+    loginCheck()
     while True:
         header()
         if v.userVerified==False:

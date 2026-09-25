@@ -24,7 +24,7 @@ def loginUser():
             if userName=="q" and  qCount<1:
                 qCount=qCount+1
                 print("Can't use 'q' as user name.\nIf you want to quit press 'q' again.")
-                time.sleep(2)
+                time.sleep(1)
                 continue
             elif qCount==1 and userName=="q":
                 print("Exiting...")

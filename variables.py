@@ -1,10 +1,7 @@
-userName="raja"
-# userName=""
-# userVerified=False
-userVerified=True
+userName=""
+userVerified=False
 loginTime=""
-# userId=""
-userID="1000"
+userID=""
 logo="""    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |          Productivity Monitor           |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+

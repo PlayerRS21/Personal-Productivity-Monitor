@@ -7,12 +7,20 @@ import categories as c
 
 
 def listtasks():
+    if v.userVerified == False:
+        print("Login First")
+        exit()
+        
     querry=f"SELECT * FROM tasks WHERE user_id=%s"
     data=(v.userID,)
     return db.DBExecute(querry,data)
 
 # Function to View Tasks Done
 def viewActivity():
+    if v.userVerified == False:
+        print("Login First")
+        exit()
+        
     while True:
         header()
         if v.userVerified!=True:
@@ -30,10 +38,13 @@ def viewActivity():
             for i in range(len(response)):
                 hours, remainder = divmod(response[i][5], 3600)
                 minutes, seconds = divmod(remainder, 60)
+                print(response[i][2])
                 if minutes==0:
                     print(f"{i+1}. {response[i][1]} : {c.allCategories[str(response[i][2])]} :  {seconds}s")
+                    
                 elif hours==0:
                     print(f"{i+1}. {response[i][1]} : {c.allCategories[str(response[i][2])]} :  {minutes}m {seconds}s")
+                    
                 else:
                     print(f"{i+1}. {response[i][1]} : {c.allCategories[str(response[i][2])]} :  {hours}h {minutes}m {seconds}s")
 

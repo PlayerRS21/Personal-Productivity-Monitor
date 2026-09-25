@@ -5,9 +5,14 @@ import database as db
 import variables as v
 import categories as c
 
+def loginCheck():
+    if v.userVerified == False:
+        print("Login First")
+        exit()
 
 # Function to add tasks
 def addActivity():
+    loginCheck()
     condition=True
     while condition:
         header()
