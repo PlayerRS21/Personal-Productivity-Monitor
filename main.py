@@ -1,19 +1,21 @@
-import first_screen 
+import first_screen as fs
 from login import loginUser
 from newUser import createUser
-import router 
 import variables as v
 
-function=first_screen.initial()
+function=fs.initial()
 while True:
     if function == 1:
+        import router 
         loginUser()
         break
 
     elif function == 2:
+        import router 
         createUser()
         break
 
     else:
+        print(function)
         print("Something Went Wrong")
         exit()

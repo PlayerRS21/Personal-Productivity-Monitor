@@ -5,33 +5,25 @@ import time
 import categories as c
 
 
+
 # Function to Update Activity
 def updateActivity():
-    if v.userVerified == False:
+    if v.userVerified==False:
         print("Login First")
         exit()
+    categories = c.listAllCategories("name_id")
     while True:
         header()
-        if v.userVerified!=True:
-            print("User Not Logged in.")
+        querry="SELECT * FROM tasks where user_id=%s"
+        data=(v.userID,)
+        response=db.DBExecute(querry,data)
+        if response==[]:
+            print("No Tasks to Update")
             time.sleep(1)
             break
-            
-        querry="SELECT * FROM tasks WHERE user_ID=%s"
-        data=(v.userID,)
-        response = db.DBExecute(querry,data)
-        if response==[]:
-            print("No Tasks To Display.")
-            try:
-                input("Press enter to continue")
-                break
-            except:
-                print("Returning to main menu")
-                time.sleep(1)
-                break
-            
+
         for i in range(len(response)):
-            print(f"{i+1}. {response[i][1]}   :   {c.allCategories[str(response[i][2])]}")
+            print(f"{i+1}. {response[i][1]}   :   {categories[response[i][2]]}")
             
         try:
             wtsk=input("Enter Which Activity you want to modify: ")
@@ -102,45 +94,52 @@ def updateActivity():
             print("A system input/output error occurred.")
             print("Returning to main menu")
             time.sleep(1)
+
+        if whattochange>len(todo):
+            print("Invalid choice")
+            time.sleep(1)
+            continue
             
         if whattochange==1:
-            while True:
-                try:
-                    newname=input("Enter New Name to set.\n: ")
+            try:
+                newname=input("Enter New Name to set.\n: ")
 
-                except EOFError:
-                    print("No input was provided.")
-                    time.sleep(1)
-                    continue
+            except EOFError:
+                print("No input was provided.")
+                time.sleep(1)
+                continue
 
-                except KeyboardInterrupt:
-                    print("\nInput cancelled by the user.")
-                    print("Returning to main menu")
-                    time.sleep(1)
-                    break
+            except KeyboardInterrupt:
+                print("\nInput cancelled by the user.")
+                print("Returning to main menu")
+                time.sleep(1)
+                break
 
-                except OSError:
-                    print("A system input/output error occurred.")
-                    print("Returning to main menu")
-                    time.sleep(1)
-                    break
-                    
-                querry="UPDATE tasks SET taskName=%s WHERE id=%s"
-                data=(newname,tskid)
-                response=db.DBSaveData(querry,data)
-                if response["status"]==True:
-                    print("Updated Successfully")
-                    time.sleep(1)
-                    break
+            except OSError:
+                print("A system input/output error occurred.")
+                print("Returning to main menu")
+                time.sleep(1)
+                break
 
-                else:
-                    print("Error in updating data")
-                    print(response["error"])
-                    exit()
+            querry="UPDATE tasks SET taskName=%s WHERE id=%s"
+            data=(newname,tskid)
+            response=db.DBSaveData(querry,data)
+            if response["status"]==True:
+                print("Updated Successfully")
+                time.sleep(1)
+                break
+
+            else:
+                print("Error in updating data")
+                print(response["error"])
+                exit()
+
+            
 
         elif whattochange==2:
+        
             userChoice=c.chooseCategory()
-            
+
             querry="UPDATE tasks SET category=%s WHERE id=%s"
             data=(userChoice,tskid)
             response=db.DBSaveData(querry,data)
@@ -148,7 +147,18 @@ def updateActivity():
                 print("Update Sucessful")
                 time.sleep(1)
                 break
+                
             else:
                 print("Error is updating data")
                 print(response["error"])
                 exit()
+                break
+
+        else:
+            print("Error with input")
+            time.sleep(2)
+            break
+
+
+if __name__=="__main__":
+    updateActivity()

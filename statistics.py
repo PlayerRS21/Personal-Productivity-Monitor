@@ -11,42 +11,56 @@ def loginCheck():
         print("Login First")
         exit()
 
-querry="SELECT MIN(created_on) FROM tasks WHERE user_ID=%s"
-data=(v.userID,)
+querry="SELECT MIN(created_at) FROM sessions WHERE user_ID=%s"
+# data=(v.userID,)
+data=(1000,)
 minimumDate=db.DBExecute(querry,data)
 minimumDate=str(minimumDate[0][0])[:11]
-querry="SELECT MAX(created_on) FROM tasks WHERE user_ID=%s"
+querry="SELECT MAX(created_at) FROM sessions WHERE user_ID=%s"
 maximumDate=db.DBExecute(querry,data)
 maximumDate=str(maximumDate[0][0])[:11]
 
+# print(maximumDate,minimumDate)
+# input()
+categories=c.listAllCategories("name_id")
 
 # Function to view Daily Statstics
 def viewStatDaily():
     header()
-    query="SELECT SUM(total_time) FROM tasks WHERE user_ID=%s AND category=%s AND created_on >= CURDATE()  AND created_on <= NOW()"
+    query="SELECT tasks.id, tasks.category, SUM(sessions.total_time) FROM tasks INNER JOIN sessions on tasks.id=sessions.task_id WHERE tasks.user_ID=%s AND category=%s AND created_at >= CURDATE()  AND created_at <= NOW()"
     print("Today's Productivity")
     print("-"*20)
-    
-    for key,value in c.listAllCategories().items():
+    totalTime=0
+    for key,value in categories.items():
         data=(v.userID,key)
-        response = db.DBExecute(query,data)
+        response = db.DBExecute(query,data)        
         
         if response[0][0]!=None:
-        
-            hours, remainder = divmod(response[0][0], 3600)
+            totalTime=totalTime+response[0][2]
+            hours, remainder = divmod(response[0][2], 3600)
             minutes, seconds = divmod(remainder, 60)
             
             if minutes==0 and hours == 0:
                 print(f"{value}  {seconds}s")
-                
+
             elif hours==0:
                 print(f"{value}  {minutes}m {seconds}s")
-                
+
             else:
                 print(f"{value}  {hours}h {minutes}m {seconds}s")
-    print("-"*20)
-    
-# Function to view Monthly Statistics
+
+    hours, remainder = divmod(totalTime, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    print("Total Productivity  ",end="")
+    if minutes==0 and hours==0:
+        print(f"{seconds}s")
+    elif hours==0:
+        print(f"{minutes}m {seconds}s")
+    else:
+        print(f"{hours}h {minutes}m {seconds}s")
+                
+    print("-"*20)    
+
 def viewStatMonthly():
     global maximumDate
     global minimumDate
@@ -54,16 +68,16 @@ def viewStatMonthly():
     month=1
     tempmaxDate=int(str(maximumDate[5:7]))
     header()
-    querry="SELECT SUM(total_time) FROM tasks WHERE user_ID=%s AND category=%s AND created_on >= %s AND created_on <= %s"
+    querry = "SELECT tasks.id, tasks.category, SUM(sessions.total_time) FROM tasks INNER JOIN sessions on tasks.id=sessions.task_id WHERE tasks.user_ID=%s AND category=%s AND created_at >= %s AND created_at <= %s"
     print(" ","="*25)
     print(" ||  Monthly Productivity || ")
     print(" ","="*25)
     monthlist=["January","Febuary","March","April","May","June","July","August","September","October","November","December"]    
+    totalTime=0
     while month<=tempmaxDate:
         print("-"*30)
         print(f"{monthlist[month-1]} {year} Productivity")
-        totalTime=0
-        for key,value in c.listAllCategories().items():
+        for key,value in categories.items():
             if month<10:
                 extra=f"{year}-0{month}-01"
                 extraDate=f"2026-{month+1}-01"
@@ -74,8 +88,8 @@ def viewStatMonthly():
             data=(v.userID,key,extra,extraDate)
             response=db.DBExecute(querry,data)
             if response[0][0]!=None:
-                totalTime=totalTime+response[0][0]
-                hours, remainder = divmod(response[0][0], 3600)
+                totalTime=totalTime+response[0][2]
+                hours, remainder = divmod(response[0][2], 3600)
                 minutes, seconds = divmod(remainder, 60)
         
                 if minutes==0 and hours==0:
@@ -108,22 +122,23 @@ def viewStatYearly():
     # global maximumDate
     tempminDate=int(str(minimumDate[:4]))
     header()
-    querry="SELECT SUM(total_time) FROM tasks WHERE user_ID=%s AND category=%s AND created_on >= %s AND created_on < %s"
+    querry="SELECT tasks.id, tasks.category, SUM(sessions.total_time) FROM tasks INNER JOIN sessions on tasks.id=sessions.task_id WHERE tasks.user_ID=%s AND tasks.category=%s AND created_at >= %s AND created_at < %s"
     print(" ","="*25)
     print(" ||  Yearly Productivity  ||")
     print(" ","="*25)
     while tempminDate<=int(str(maximumDate[:4])):
         print("-"*30)
-        extra="{tempminDate}-1-1"
+        extra=f"{tempminDate}-01-01"
+        maxd=f"{tempminDate+1}-12-31"
         print(f"{tempminDate} Year's Productivity")
         totalTime=0
-        for key,value in c.listAllCategories().items():
-            data=(v.userID,key,tempminDate,maximumDate)
+        for key,value in categories.items():
+            data=(v.userID,key,str(extra),str(maxd))
             response=db.DBExecute(querry,data)
 
-            if response[0][0]!=None:
-                totalTime=totalTime+response[0][0]
-                hours, remainder = divmod(response[0][0], 3600)
+            if response[0][2]!=None:
+                totalTime=totalTime+response[0][2]
+                hours, remainder = divmod(response[0][2], 3600)
                 minutes, seconds = divmod(remainder, 60)
 
                 if minutes==0 and hours==0:
@@ -210,5 +225,4 @@ def viewStatistics():
         
     
 if __name__=="__main__":
-    # viewStatDaily()
     viewStatistics()

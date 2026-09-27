@@ -105,7 +105,7 @@ def deleteActivity():
             break
         
         if suretodelete=="y":
-            querry=f"DELETE FROM tasks WHERE id=%s"
+            querry="DELETE FROM tasks WHERE id =%s"
             data=(tskid,)
             response=db.DBSaveData(querry,data)
             input(response)

@@ -13,53 +13,16 @@ def loginCheck():
 # Function to add tasks
 def addActivity():
     loginCheck()
-    condition=True
-    while condition:
+    while True:
         header()
         print("-"*12)
         print("| Add Task |")
         print("-"*12)
         if v.userVerified == True:
-            print("Select Category: \n")
-            i=1
-            for key in c.allCategories.values():
-                print(f" {i}. {key}")
-                i+=1
-            print()
-
-            try:
-                selectCategory=input("--> ")
-                selectCategory=int(selectCategory)
-            
-            except ValueError:
-                if selectCategory=="e":
-                    print("Exiting...")
-                    time.sleep(1)
-                    condition=False
-                    break
-        
-            except EOFError:
-                print("No input was provided.")
-                time.sleep(1)
-                continue
-        
-            except KeyboardInterrupt:
-                print("\nInput cancelled by the user.")
-                print("Returning to main menu.")
-                time.sleep(1)
-                condition=False
+            selectCategory=c.chooseCategory()
+            if selectCategory is None:
                 break
-        
-            except OSError:
-                print("A system input/output error occurred.")
-                condition =False
-                break
-
-            if selectCategory>len(c.allCategories):
-                print("Incorrect Choice.")
-                time.sleep(0.5)
-                continue
-
+                
             try:    
                 work=input("Enter Task Name: ")
                 
@@ -96,18 +59,34 @@ def addActivity():
                 time.sleep(1)
 
             eTime=time.perf_counter()
-            query="INSERT INTO tasks (taskName,category,user_id,created_on,total_time) VALUES (%s,%s,%s,%s,%s)"
+            eTimeHum=str(time.strftime("%H:%M:%S",time.localtime(time.time())))
+            query="INSERT INTO tasks (taskName,category,user_id) VALUES (%s,%s,%s)"
             hours, remainder = divmod(eTime-sTime, 3600)
             minutes, seconds = divmod(remainder, 60)
-            tt=eTime-sTime
+            tt=int(eTime-sTime)
+            et=f"{str(datetime.now())[:10]} {eTimeHum[:2]}:{eTimeHum[3:5]}:{eTimeHum[6:8]}"
             st=f"{str(datetime.now())[:10]} {sTimeHum[:2]}:{sTimeHum[3:5]}:{sTimeHum[6:8]}"
-            
-            data=(work,selectCategory+100,v.userID,st,int(tt))
+            data=(work,selectCategory,v.userID)
             response=db.DBSaveData(query,data)
+            
             if response["status"]==True:
-                print(f"Activity Completed in {int(hours)}h {int(minutes)}m")
-                time.sleep(1)
-                break
+                query="INSERT INTO sessions (user_id, task_id, created_at, ended_at, total_time, status) VALUES (%s,%s,%s,%s,%s,%s)"
+                lastid=db.getid()
+                data=(v.userID,lastid,st,et,tt,"Completed")
+                response=db.DBSaveData(query,data)
+                if response["status"]==True:
+                    print(f"Activity Completed in {int(hours)}h {int(minutes)}m")
+                    time.sleep(1)
+                    break
+
+                else:
+                    # print("Error at 2nd cmd")
+                    print(response["error"])
+                    exit()
+            else:
+                # print("Error at 1st cmd")
+                print(response["error"])
+                exit()
             
         else:
             print("Login First...")

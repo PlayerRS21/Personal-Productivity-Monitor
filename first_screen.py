@@ -2,11 +2,13 @@ from newScreen import header
 from login import loginUser
 from newUser import createUser
 import time
+import os
+import categories
+
 
 # Checking is the user new or old via login and register
 def initial():
-    condition=True
-    while condition:
+    while True:
         header()
         print("Enter Your Choice: ")
         try:

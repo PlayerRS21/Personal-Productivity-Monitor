@@ -26,9 +26,17 @@ def connectDB():
         cursor.execute("USE productivityMonitor")
         cursor.execute("CREATE TABLE IF NOT EXISTS users(id INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,userName VARCHAR(50) NOT NULL UNIQUE,email VARCHAR(70) NOT NULL UNIQUE,password VARCHAR(100) NOT NULL,created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,last_login TIMESTAMP DEFAULT NULL)AUTO_INCREMENT=1000")
         # (id,username,email,password,created_on,last_login)
-        cursor.execute("CREATE TABLE IF NOT EXISTS tasks(id INT AUTO_INCREMENT UNIQUE,taskName VARCHAR(100) NOT NULL,category INT NOT NULL,user_id INT NOT NULL,created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,total_time INT NOT NULL)")
-        # (id,taskName,category,user_id,created_on,total_time)
-        # print("Successfully connected to MariaDB server!")
+        
+        cursor.execute("CREATE TABLE IF NOT EXISTS tasks(id INT AUTO_INCREMENT UNIQUE,taskName VARCHAR(100) NOT NULL,category INT NOT NULL,user_id INT NOT NULL)")
+        # (id, taskName, category, user_id)
+        
+        cursor.execute("CREATE TABLE IF NOT EXISTS sessions (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, task_id INT, created_at TIMESTAMP NOT NULL, ended_at TIMESTAMP, total_time INT, break_taken INT DEFAULT 0, status VARCHAR(20), CONSTRAINT foreign_id FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE)")
+        # (id, user_id, task_id, created_at, ended_at, total_time, break_taken, status)
+        
+        cursor.execute("CREATE TABLE IF NOT EXISTS categories (category_id INT AUTO_INCREMENT PRIMARY KEY, category_name VARCHAR(100) NOT NULL UNIQUE, user_id INT NOT NULL)AUTO_INCREMENT=100")
+        # (category_id, category_name, user_id)
+        
+        
         dbconnected=True
         return (True,conn,cursor)
     except mysql.connector.Error as e:
@@ -46,6 +54,7 @@ def DBExecute(querry,data:tuple|list):
     try:
         cursor.execute(querry,data)
         return cursor.fetchall()
+        
     except Error as e:
         print(e)
         exit()
@@ -88,5 +97,11 @@ def DBSaveData(querry,data:tuple|list):
         return {"status": True,"error":None}
         
     except Error as e:
-        print(e)
-        exit()
+        # print(e)
+        return {"status": False,"error":e}
+
+def getid():
+    return cursor.lastrowid
+
+if __name__=="__main__":
+    connectDB()
