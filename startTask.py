@@ -4,6 +4,9 @@ from datetime import datetime
 import database as db
 import variables as v
 import categories as c
+import os
+import json
+import threading
 
 def loginCheck():
     if v.userVerified == False:
@@ -52,9 +55,37 @@ def addActivity():
             sTime=time.perf_counter()
             sTimeHum=str(time.strftime("%H:%M:%S",time.localtime(time.time())))
             print(f"Task Started at {sTimeHum}\nPress Ctrl + C to exit.")
+
+            if os.path.isfile(".runningTasks.json"):
+                with open(".runningTasks.json","w") as file:
+                    data={"taskName":work,"startTime":sTimeHum,"lastUpdatedTime":newTime}
+                    json.dump(data, file, indent=2)
+            else:
+                print("Not Exists")
+
+            def check(x):
+                lst=[]
+                while not x.is_set():
+                    lst.append("Worked")
+                    time.sleep(2)
+                time.sleep(3)
+                print(lst)
+
+            x=threading.Event()
+            t1=threading.Thread(target=check,args=(x,))
+            t1.daemon=True
+            t1.start()
+
+            input("Completed...")
+            x.set()
+            t1.join()
+            # print(lst)
+
+            input("last input")
             
             try:
                 input("")
+                
             except:
                 time.sleep(1)
 

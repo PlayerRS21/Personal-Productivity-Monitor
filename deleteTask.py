@@ -108,7 +108,6 @@ def deleteActivity():
             querry="DELETE FROM tasks WHERE id =%s"
             data=(tskid,)
             response=db.DBSaveData(querry,data)
-            input(response)
             if response["status"]==True:
                 print("Task Deleted.")
                 time.sleep(1)
