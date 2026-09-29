@@ -56,20 +56,15 @@ def addActivity():
             sTimeHum=str(time.strftime("%H:%M:%S",time.localtime(time.time())))
             print(f"Task Started at {sTimeHum}\nPress Ctrl + C to exit.")
 
-            if os.path.isfile(".runningTasks.json"):
+            if not os.path.isfile(".runningTasks.json"):
                 with open(".runningTasks.json","w") as file:
-                    data={"taskName":work,"startTime":sTimeHum,"lastUpdatedTime":newTime}
+                    data={"taskName":work, "category":selectCategory,"startTime":sTimeHum,"lastUpdatedTime":newTime}
                     json.dump(data, file, indent=2)
             else:
-                print("Not Exists")
-
-            def check(x):
-                lst=[]
-                while not x.is_set():
-                    lst.append("Worked")
-                    time.sleep(2)
-                time.sleep(3)
-                print(lst)
+                def writeToFile():
+                    with open(".runningTasks.json","w") as file:
+                        data={"taskName":work, "category":selectCategory,"startTime":sTimeHum,"lastUpdatedTime":newTime}
+                        json.dump(data, file, indent=2)
 
             x=threading.Event()
             t1=threading.Thread(target=check,args=(x,))
