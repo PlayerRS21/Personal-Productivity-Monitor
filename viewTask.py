@@ -39,7 +39,7 @@ def viewActivity():
                     minutes, seconds = divmod(remainder, 60)
                     categories=c.listAllCategories("name_id")
                     if minutes==0:
-                        print(f"{i}. {response[i][1]} : {categories[response[i][2]]} :  {seconds}s")
+                        print(f"{i+1}. {response[i][1]} : {categories[response[i][2]]} :  {seconds}s")
                         
                     elif hours==0:
                         print(f"{i+1}. {response[i][1]} : {categories[response[i][2]]} :  {minutes}m {seconds}s")

@@ -7,6 +7,8 @@ import deleteTask as de
 import searchTask as se
 import statistics as stat
 import variables as v
+import os
+import json
 
 
 def loginCheck():
@@ -14,11 +16,70 @@ def loginCheck():
         print("Login First")
         exit()
 
+
+def checkPastTasks():
+    path=".runningTasks.json"
+    if not os.path.isfile(path) or os.path.getsize(path) == 0:
+        with open(".runningTasks.json","w") as file:
+            data={}
+            json.dump(data,file,indent=2)
+            return False
+        
+    with open(".runningTasks.json","r") as file:
+        tasks=json.load(file)
+        if v.userID in tasks:
+            return True
+        
+
+
 # Routes to every function
 def router():
     loginCheck()
     while True:
         header()
+        if checkPastTasks():
+            print("Unsaved Tasks Found Want to continue the tasks or end? ")
+            try:
+                todo=input("1. Resume \n2. End Task\n==> ")
+                todo=int(todo)
+                
+            except ValueError:
+                if todo == "q":
+                    print("Returning to login.")
+                    time.sleep(1)
+                    break
+             
+                print("Please enter a number.")
+                time.sleep(1)
+                continue                 
+    
+            except EOFError:
+                print("No input was provided.")
+                time.sleep(1)
+                continue
+             
+            except KeyboardInterrupt:
+                print("\nInput cancelled by the user.")
+                print("Routing Back to Login.")
+                time.sleep(0.7)
+                break
+             
+            except OSError:
+                print("A system input/output error occurred.")
+                break
+
+            if todo>3 or todo<0:
+                print("Invalid option.")
+                time.sleep(1)
+                continue
+
+            if todo==1:
+                st.resumeTask()
+                continue
+            elif todo ==2:
+                st.saveTask()
+                continue
+                
         newchoice=["Add New Task","View Previous Tasks","Update Activity","Delete Activity","Search Activity","View Statistics","Logout"]
         print("Enter your choice: ")
         for i in range(len(newchoice)):

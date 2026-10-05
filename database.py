@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
 import variables as v
+import json
 
 cursor=""
 conn=""
@@ -33,9 +34,20 @@ def connectDB():
         cursor.execute("CREATE TABLE IF NOT EXISTS sessions (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, task_id INT, created_at TIMESTAMP NOT NULL, ended_at TIMESTAMP, total_time INT, break_taken INT DEFAULT 0, status VARCHAR(20), CONSTRAINT foreign_id FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE)")
         # (id, user_id, task_id, created_at, ended_at, total_time, break_taken, status)
         
-        cursor.execute("CREATE TABLE IF NOT EXISTS categories (category_id INT AUTO_INCREMENT PRIMARY KEY, category_name VARCHAR(100) NOT NULL UNIQUE, user_id INT NOT NULL)AUTO_INCREMENT=100")
+        cursor.execute("CREATE TABLE IF NOT EXISTS categories (category_id INT AUTO_INCREMENT PRIMARY KEY, category_name VARCHAR(100) NOT NULL UNIQUE)AUTO_INCREMENT=100")
         # (category_id, category_name, user_id)
-        
+
+        cursor.execute("SELECT * FROM categories")
+        response = cursor.fetchall()
+        if response==[]:
+            default={}
+            with open(".categories.json") as file:
+                default = json.load(file)
+                querry="INSERT INTO categories(category_id,category_name) VALUES (%s,%s)"
+                for key,value in default.items():
+                    data=(key,value)
+                    cursor.execute(querry,data)
+                    conn.commit()
         
         dbconnected=True
         return (True,conn,cursor)
