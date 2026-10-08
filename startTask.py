@@ -18,7 +18,7 @@ def loginCheck():
 
 class FileRelated:
     def __init__(self,work,category,sTime,brktkn=0,lstme="",ttime=0):
-        if len(sTime)>22:
+        if len(str(sTime))>22:
             sTime=str(sTime)[:-4]
         self.work=work
         self.category=category
@@ -291,7 +291,7 @@ def resumeTask():
                     done.set()
                     t2.join()
                     helper.writeToFile()
-                elif end ="l":
+                elif end =="l":
                     print("You can continue the activity later.")
                     time.sleep(1)
                     exit()

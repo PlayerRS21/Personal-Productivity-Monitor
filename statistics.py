@@ -1,24 +1,31 @@
 from newScreen import header
 import variables as v
-from datetime import datetime
+from datetime import datetime,date
 import database as db
 from viewTask import listtasks
 import categories as c
 import time
 
+
+
+minimumDate=""
+maximumDate=""
+
+
 def loginCheck():
+    global maximumDate
+    global minimumDate
     if v.userVerified == False:
         print("Login First")
         exit()
 
-querry="SELECT MIN(created_at) FROM sessions WHERE user_ID=%s"
-# data=(v.userID,)
-data=(1000,)
-minimumDate=db.DBExecute(querry,data)
-minimumDate=str(minimumDate[0][0])[:11]
-querry="SELECT MAX(created_at) FROM sessions WHERE user_ID=%s"
-maximumDate=db.DBExecute(querry,data)
-maximumDate=str(maximumDate[0][0])[:11]
+    querry="SELECT MIN(created_at) FROM sessions WHERE user_ID=%s"
+    data=(v.userID,)
+    minimumDate=db.DBExecute(querry,data)
+    minimumDate=str(minimumDate[0][0])[:11]
+    querry="SELECT MAX(created_at) FROM sessions WHERE user_ID=%s"
+    maximumDate=db.DBExecute(querry,data)
+    maximumDate=str(maximumDate[0][0])[:11]
 
 # print(maximumDate,minimumDate)
 # input()
@@ -80,10 +87,10 @@ def viewStatMonthly():
         for key,value in categories.items():
             if month<10:
                 extra=f"{year}-0{month}-01"
-                extraDate=f"2026-{month+1}-01"
+                extraDate=f"{year}-{month+1}-01"
             else:
                 extra=f"{year}-{month}-01"
-                extraDate=f"2026-{month+1}-01"
+                extraDate=f"{year}-{month+1}-01"
 
             data=(v.userID,key,extra,extraDate)
             response=db.DBExecute(querry,data)
@@ -165,6 +172,75 @@ def viewStatYearly():
         print("-"*30)
         print()
 
+# Fubction to view Weekly Statistics
+def viewStatWeekly():
+    header()
+    query="SELECT tasks.id, tasks.user_ID, tasks.category, SUM(sessions.total_time) FROM tasks JOIN sessions ON tasks.id = sessions.task_id WHERE tasks.user_ID = %s AND tasks.category = %s AND created_at >= %s AND created_at < %s"
+    print(" ","="*25)
+    print(" ||  Weekly Productivity  ||")
+    print(" ","="*25)
+    t=datetime.now()
+    day=t.day
+    month=t.month
+    year=t.year
+    d=date(year, month, day)
+    dayNumber=["sunday","monday","tuesday","wednesday","thursday","friday","saturday"]
+    dn=d.strftime("%A")
+    dind=dayNumber.index(dn.lower())
+    total=0
+    for i in range(dind+1):
+        tmp=day
+        tmp=(tmp-dind)+i
+        lstdt=tmp-1
+        totalTime=0
+        print(dayNumber[i].capitalize(),":")
+        print("-"*30)
+        for key,value in categories.items():
+            dateNormal=f"{year}-{month}-{tmp}"
+            datelst=f"{year}-{month}-{lstdt}"
+            data=(v.userID,key,datelst,dateNormal)
+            # print(data)
+            response=db.DBExecute(query,data)
+            # print(response)
+            if response==[]:
+                continue
+                    
+            elif response[0][0]!=None:
+                totalTime=totalTime+response[0][3]
+                hours, remainder = divmod(response[0][3], 3600)
+                minutes, seconds = divmod(remainder, 60)
+                print(categories[response[0][2]],end=" ")
+                if minutes==0 and hours==0:
+                    print(f"{seconds}s")
+                elif hours==0:
+                    print(f"{minutes}m {seconds}s")
+                else:
+                    print(f"{hours}h {minutes}m {seconds}s")
+
+        hours, remainder = divmod(totalTime, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        total=total+totalTime
+        print("Total Productivity: ",end="")
+        if minutes==0 and hours==0:
+            print(f"{seconds}s")
+        elif hours==0:
+            print(f"{minutes}m {seconds}s")
+        else:
+            print(f"{hours}h {minutes}m {seconds}s")
+
+        lstdt=lstdt+1
+        print("-"*30)
+        print()
+    hours, remainder = divmod(total, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    print("Total Productivity: ",end="")
+    if minutes==0 and hours==0:
+        print(f"{seconds}s")
+    elif hours==0:
+        print(f"{minutes}m {seconds}s")
+    else:
+        print(f"{hours}h {minutes}m {seconds}s")
+
 
 def viewStatistics():
     loginCheck()
@@ -173,7 +249,7 @@ def viewStatistics():
         print("View Statistics on basis of:")
         
         try:
-            userChoice=input("1. Today's Statistics\n2. Monthly Statistics\n3. Yearly Statistics\n--> ")
+            userChoice=input("1. Today's Statistics\n2. Monthly Statistics\n3. Yearly Statistics\n4.Weekly Statistics\n--> ")
             userChoice=int(userChoice)
         
         except ValueError:
@@ -215,6 +291,11 @@ def viewStatistics():
             
         elif userChoice == 3:
             viewStatYearly()
+            input("Press 'enter' to continue ")
+            break
+
+        elif userChoice == 4:
+            viewStatWeekly()
             input("Press 'enter' to continue ")
             break
             
